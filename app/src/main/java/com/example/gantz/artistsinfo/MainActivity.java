@@ -1,12 +1,14 @@
 package com.example.gantz.artistsinfo;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.gantz.artistsinfo.api.ArtistsApi;
@@ -21,22 +23,45 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends ListActivity implements Callback<List<Artist>> {
+public class MainActivity extends AppCompatActivity implements Callback<List<Artist>> {
 
     private static final String TAG = "MainActivity";
 
     private ArrayAdapter<Artist> adapter;
     private List<Artist> artists;
 
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ListView listView = (ListView) findViewById(R.id.listView);
 
         artists = new ArrayList<>();
         adapter = new ArtistAdapter(this, R.layout.list_item, artists);
-        setListAdapter(adapter);
+
+        assert listView != null;
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(view.getContext(), InfoActivity.class);
+                intent.putExtra("CURRENT_ARTIST", artists.get(position));
+                startActivity(intent);
+            }
+        });
+
         getArtistsList();
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        assert progressBar != null;
+        progressBar.setVisibility(View.VISIBLE);
     }
+
 
     protected void getArtistsList() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -49,24 +74,18 @@ public class MainActivity extends ListActivity implements Callback<List<Artist>>
         call.enqueue(this);
     }
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        Intent intent = new Intent(this, InfoActivity.class);
-        intent.putExtra("CURRENT_ARTIST", artists.get(position));
-        startActivity(intent);
-    }
 
     @Override
     public void onResponse(Call<List<Artist>> call, Response<List<Artist>> response) {
         artists.clear();
         artists.addAll(response.body());
         adapter.notifyDataSetChanged();
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onFailure(Call<List<Artist>> call, Throwable t) {
         Log.e(TAG, "onFailure: " + t.getLocalizedMessage());
-        Toast.makeText(MainActivity.this, "Упс, что то пошло не так.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Упс, что-то пошло не так.", Toast.LENGTH_SHORT).show();
     }
 }
