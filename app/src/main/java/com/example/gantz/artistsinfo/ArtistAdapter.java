@@ -26,27 +26,29 @@ public class ArtistAdapter extends ArrayAdapter<Artist> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_item, parent, false);
+        View itemView = convertView;
+
+        if (itemView == null) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            itemView = inflater.inflate(R.layout.list_item, parent, false);
         }
 
         Artist artist = values.get(position);
 
-        TextView tvName = (TextView) convertView.findViewById(R.id.name);
-        TextView tvGenres = (TextView) convertView.findViewById(R.id.genres);
-        TextView tvNumbers = (TextView) convertView.findViewById(R.id.numbers);
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.icon);
+        TextView tvName = (TextView) itemView.findViewById(R.id.name);
+        TextView tvGenres = (TextView) itemView.findViewById(R.id.genres);
+        TextView tvNumbers = (TextView) itemView.findViewById(R.id.numbers);
+        ImageView imageView = (ImageView) itemView.findViewById(R.id.icon);
 
         tvName.setText(artist.name);
         tvGenres.setText(artist.genresToString());
         tvNumbers.setText(String.format("%s, %s", artist.albumsNumberToString(), artist.tracksNumberToString()));
 
         // Загружаем аватарку.
-        Picasso.with(context).setIndicatorsEnabled(true);
+//        Picasso.with(context).setIndicatorsEnabled(true);
         Picasso.with(context).load(artist.cover.small).into(imageView);
 
-        return convertView;
+        return itemView;
     }
 }

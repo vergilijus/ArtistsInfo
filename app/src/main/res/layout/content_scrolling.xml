@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".InfoActivity"
+    tools:showIn="@layout/activity_info">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/genres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/cover"
+            android:layout_marginLeft="10dip"
+            android:layout_marginTop="14dip"
+            android:text="Жанры"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/numbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/genres"
+            android:layout_marginLeft="10dip"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="14dip" />
+
+        <TextView
+            android:id="@+id/biographyTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/numbers"
+            android:layout_marginLeft="10dip"
+            android:text="Биография"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginTop="14dip" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/biographyTitle"
+            android:layout_alignStart="@+id/biographyTitle"
+            android:layout_below="@+id/biographyTitle"
+            android:text="@string/large_text"
+            android:layout_marginTop="5dip"
+            android:layout_marginRight="5dip" />
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

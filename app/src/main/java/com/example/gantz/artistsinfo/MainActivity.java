@@ -38,9 +38,12 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Art
         setContentView(R.layout.activity_main);
 
         ListView listView = (ListView) findViewById(R.id.listView);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         artists = new ArrayList<>();
         adapter = new ArtistAdapter(this, R.layout.list_item, artists);
+
+        setTitle("Исполнители");
 
         assert listView != null;
         listView.setAdapter(adapter);
@@ -55,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Art
         });
 
         getArtistsList();
-
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         assert progressBar != null;
         progressBar.setVisibility(View.VISIBLE);
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Art
     @Override
     public void onFailure(Call<List<Artist>> call, Throwable t) {
         Log.e(TAG, "onFailure: " + t.getLocalizedMessage());
+        progressBar.setVisibility(View.GONE);
         Toast.makeText(MainActivity.this, "Упс, что-то пошло не так.", Toast.LENGTH_SHORT).show();
     }
 }
