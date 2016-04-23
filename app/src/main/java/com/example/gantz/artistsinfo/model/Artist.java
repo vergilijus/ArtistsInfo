@@ -29,4 +29,22 @@ public class Artist implements Serializable {
         this.description = description;
     }
 
+    public String albumsNumberToString() {
+        return albums + " альбом(а/ов)";
+    }
+
+    public String tracksNumberToString() {
+        return tracks + " пес(ен/ни)";
+    }
+
+    public String genresToString() {
+        StringBuilder sb = new StringBuilder();
+        int length = genres.length;
+        for (int i = 0; i < length - 2; ++i) {
+            sb.append(genres[i]).append(", ");
+        }
+        sb.append(genres[length - 1]);
+        return sb.toString();
+    }
+
 }

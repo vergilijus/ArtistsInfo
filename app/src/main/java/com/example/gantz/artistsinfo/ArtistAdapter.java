@@ -39,14 +39,7 @@ public class ArtistAdapter extends ArrayAdapter<Artist> {
         ImageView imageView = (ImageView) convertView.findViewById(R.id.icon);
 
         tvName.setText(artist.name);
-
-        // Собираем строку из жанров.
-        StringBuilder sb = new StringBuilder();
-        for (String genre: artist.genres) {
-            sb.append(genre).append(", ");
-        }
-
-        tvGenres.setText(sb.toString());
+        tvGenres.setText(artist.genresToString());
 
         // Загружаем аватарку.
         Picasso.with(context).setIndicatorsEnabled(true);
