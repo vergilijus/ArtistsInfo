@@ -36,10 +36,12 @@ public class ArtistAdapter extends ArrayAdapter<Artist> {
 
         TextView tvName = (TextView) convertView.findViewById(R.id.name);
         TextView tvGenres = (TextView) convertView.findViewById(R.id.genres);
+        TextView tvNumbers = (TextView) convertView.findViewById(R.id.numbers);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.icon);
 
         tvName.setText(artist.name);
         tvGenres.setText(artist.genresToString());
+        tvNumbers.setText(String.format("%s, %s", artist.albumsNumberToString(), artist.tracksNumberToString()));
 
         // Загружаем аватарку.
         Picasso.with(context).setIndicatorsEnabled(true);

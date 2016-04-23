@@ -18,7 +18,7 @@
 
 
     <TextView
-        android:id="@+id/genres"
+        android:id="@+id/numbers"
         android:layout_width="fill_parent"
         android:layout_height="26dip"
         android:layout_alignParentBottom="true"
@@ -26,7 +26,7 @@
         android:layout_toRightOf="@id/icon"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:text="Default genres"
+        android:text="Нет данных"
         android:textSize="12sp" />
 
     <TextView
@@ -41,6 +41,16 @@
         android:text="Default name"
         android:textSize="16sp"
         android:textColor="@color/colorPrimary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/genres"
+        android:layout_below="@+id/name"
+        android:layout_alignLeft="@+id/name"
+        android:layout_alignStart="@+id/name"
+        android:textSize="12sp"/>
 
 
 </RelativeLayout>
