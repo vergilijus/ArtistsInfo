@@ -40,6 +40,9 @@ public class Artist implements Serializable {
     public String genresToString() {
         StringBuilder sb = new StringBuilder();
         int length = genres.length;
+        if (length < 1) {
+            return "Не указан";
+        }
         for (int i = 0; i < length - 2; ++i) {
             sb.append(genres[i]).append(", ");
         }
