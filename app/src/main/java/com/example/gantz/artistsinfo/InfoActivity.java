@@ -14,8 +14,6 @@ import com.squareup.picasso.Picasso;
 
 public class InfoActivity extends AppCompatActivity {
 
-    private Artist artist;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +21,6 @@ public class InfoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ImageView imageView = (ImageView) findViewById(R.id.cover);
         TextView tvGenres = (TextView) findViewById(R.id.genres);
         TextView tvDescription = (TextView) findViewById(R.id.description);
@@ -36,7 +33,7 @@ public class InfoActivity extends AppCompatActivity {
 
         // Получаем исполнителя.
         Intent intent = getIntent();
-        artist = (Artist) intent.getSerializableExtra("CURRENT_ARTIST");
+        Artist artist = (Artist) intent.getSerializableExtra(MainActivity.KEY_ARTIST);
 
         // Заполняем поля.
         setTitle(artist.name);

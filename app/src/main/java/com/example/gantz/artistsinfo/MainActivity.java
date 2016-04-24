@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Art
 
     private ProgressBar progressBar;
 
+    public static final String KEY_ARTIST = "CURRENT_ARTIST";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Art
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(view.getContext(), InfoActivity.class);
-                intent.putExtra("CURRENT_ARTIST", artists.get(position));
+                intent.putExtra(KEY_ARTIST, artists.get(position));
                 startActivity(intent);
             }
         });

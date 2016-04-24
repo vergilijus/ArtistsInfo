@@ -46,7 +46,6 @@ public class ArtistAdapter extends ArrayAdapter<Artist> {
         tvNumbers.setText(String.format("%s, %s", artist.albumsNumberToString(), artist.tracksNumberToString()));
 
         // Загружаем аватарку.
-//        Picasso.with(context).setIndicatorsEnabled(true);
         Picasso.with(context).load(artist.cover.small).into(imageView);
 
         return itemView;
