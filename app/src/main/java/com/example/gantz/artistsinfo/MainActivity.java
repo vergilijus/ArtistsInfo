@@ -2,6 +2,7 @@ package com.example.gantz.artistsinfo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -9,9 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.gantz.artistsinfo.api.ArtistsApi;
+import com.example.gantz.artistsinfo.dialogs.ErrorDialog;
 import com.example.gantz.artistsinfo.model.Artist;
 
 import java.util.ArrayList;
@@ -23,7 +24,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements Callback<List<Artist>> {
+public class MainActivity extends AppCompatActivity
+        implements Callback<List<Artist>>, ErrorDialog.ErrorDialogListener {
 
     private static final String TAG = "MainActivity";
 
@@ -41,11 +43,12 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Art
 
         ListView listView = (ListView) findViewById(R.id.listView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        assert progressBar != null;
 
         artists = new ArrayList<>();
         adapter = new ArtistAdapter(this, R.layout.list_item, artists);
 
-        setTitle("Исполнители");
+        setTitle(getString(R.string.main_title));
 
         assert listView != null;
         listView.setAdapter(adapter);
@@ -60,13 +63,11 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Art
         });
 
         getArtistsList();
-
-        assert progressBar != null;
-        progressBar.setVisibility(View.VISIBLE);
     }
 
 
     protected void getArtistsList() {
+        progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://ignored_url")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -88,8 +89,24 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Art
 
     @Override
     public void onFailure(Call<List<Artist>> call, Throwable t) {
-        Log.e(TAG, "onFailure: " + t.getLocalizedMessage());
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(MainActivity.this, "Упс, что-то пошло не так.", Toast.LENGTH_SHORT).show();
+        showErrorDialog();
+        Log.e(TAG, "onFailure: " + t.getLocalizedMessage());
+    }
+
+    void showErrorDialog() {
+        DialogFragment newFragment = ErrorDialog.newInstance(getString(R.string.unknown_error));
+        newFragment.show(getSupportFragmentManager(), "dialog");
+    }
+
+
+    @Override
+    public void onNegativeClick() {
+        // ...
+    }
+
+    @Override
+    public void onPositiveClick() {
+        getArtistsList();
     }
 }
