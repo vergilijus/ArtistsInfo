@@ -33,7 +33,7 @@ public class InfoActivity extends AppCompatActivity {
 
         // Получаем исполнителя.
         Intent intent = getIntent();
-        Artist artist = (Artist) intent.getSerializableExtra(MainActivity.KEY_ARTIST);
+        Artist artist = (Artist) intent.getSerializableExtra(MainActivity.KEY_CURRENT_ARTIST);
 
         // Заполняем поля.
         setTitle(artist.name);

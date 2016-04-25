@@ -1,6 +1,8 @@
 package com.example.gantz.artistsinfo;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +16,14 @@ import android.widget.ProgressBar;
 import com.example.gantz.artistsinfo.api.ArtistsApi;
 import com.example.gantz.artistsinfo.dialogs.ErrorDialog;
 import com.example.gantz.artistsinfo.model.Artist;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,16 +31,17 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
-        implements Callback<List<Artist>>, ErrorDialog.ErrorDialogListener {
+        implements Callback<ResponseBody>, ErrorDialog.ErrorDialogListener {
 
     private static final String TAG = "MainActivity";
+    private static final String PREF_FILE_NAME = "ArtistsPreferences";
+    public static final String KEY_CURRENT_ARTIST = "CURRENT_ARTIST";
+    public static final String KEY_ARTISTS = "ARTISTS";
 
     private ArrayAdapter<Artist> adapter;
     private List<Artist> artists;
 
     private ProgressBar progressBar;
-
-    public static final String KEY_ARTIST = "CURRENT_ARTIST";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +64,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(view.getContext(), InfoActivity.class);
-                intent.putExtra(KEY_ARTIST, artists.get(position));
+                intent.putExtra(KEY_CURRENT_ARTIST, artists.get(position));
                 startActivity(intent);
             }
         });
@@ -74,28 +81,33 @@ public class MainActivity extends AppCompatActivity
                 .build();
 
         ArtistsApi myApi = retrofit.create(ArtistsApi.class);
-        Call<List<Artist>> call = myApi.artistsList();
+        Call<ResponseBody> call = myApi.artistsList();
         call.enqueue(this);
     }
 
 
     @Override
-    public void onResponse(Call<List<Artist>> call, Response<List<Artist>> response) {
-        artists.clear();
-        artists.addAll(response.body());
-        adapter.notifyDataSetChanged();
-        progressBar.setVisibility(View.GONE);
+    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        try {
+            saveArtists(response.body().string());
+            updateList(getSavedArtists());
+            progressBar.setVisibility(View.GONE);
+        } catch (IOException e) {
+            showErrorDialog(getString(R.string.invalid_response));
+            e.printStackTrace();
+        }
+
     }
 
     @Override
-    public void onFailure(Call<List<Artist>> call, Throwable t) {
+    public void onFailure(Call<ResponseBody> call, Throwable t) {
         progressBar.setVisibility(View.GONE);
-        showErrorDialog();
+        showErrorDialog(getString(R.string.network_error));
         Log.e(TAG, "onFailure: " + t.getLocalizedMessage());
     }
 
-    void showErrorDialog() {
-        DialogFragment newFragment = ErrorDialog.newInstance(getString(R.string.unknown_error));
+    void showErrorDialog(String message) {
+        DialogFragment newFragment = ErrorDialog.newInstance(message);
         newFragment.show(getSupportFragmentManager(), "dialog");
     }
 
@@ -108,5 +120,28 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onPositiveClick() {
         getArtistsList();
+    }
+
+
+    private void saveArtists(String data) {
+        SharedPreferences sharedPref = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(KEY_ARTISTS, data);
+        editor.apply();
+    }
+
+    private List<Artist> getSavedArtists() {
+        SharedPreferences sharedPref = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        String data = sharedPref.getString(KEY_ARTISTS, "[]");
+        Gson gson = new Gson();
+        Artist[] artistsList = gson.fromJson(data, Artist[].class);
+        return Arrays.asList(artistsList);
+    }
+
+
+    private void updateList(List<Artist> newArtistList) {
+        artists.clear();
+        artists.addAll(newArtistList);
+        adapter.notifyDataSetChanged();
     }
 }

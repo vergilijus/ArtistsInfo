@@ -96,4 +96,6 @@
     <string name="unknown_error">Упс, что-то пошло не так. Попробовать снова?</string>
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
+    <string name="network_error">Ошибка запроса, проверьте подключение к сети.</string>
+    <string name="invalid_response">Сервер прислал какую то дичь.</string>
 </resources>
