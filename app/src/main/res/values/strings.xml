@@ -98,4 +98,5 @@
     <string name="cancel">CANCEL</string>
     <string name="network_error">Ошибка запроса, проверьте подключение к сети.</string>
     <string name="invalid_response">Сервер прислал какую то дичь.</string>
+    <string name="action_favorite">Update</string>
 </resources>
