@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,9 +53,7 @@ public class MainActivity extends AppCompatActivity
         ListView listView = (ListView) findViewById(R.id.listView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         assert progressBar != null;
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        progressBar.setVisibility(View.GONE);
 
         artists = new ArrayList<>();
         adapter = new ArtistAdapter(this, R.layout.list_item, artists);
@@ -76,12 +72,18 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        getArtistsList();
+        // Еесли нет сохраненных данных запрашиваем список исполнителей.
+        SharedPreferences preferences = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        if (!preferences.contains(KEY_ARTISTS)) {
+            requestArtistsList();
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            updateList(getSavedArtists());
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
@@ -89,13 +91,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_update) {
-            getArtistsList();
+            requestArtistsList();
+            progressBar.setVisibility(View.VISIBLE);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    protected void getArtistsList() {
-        progressBar.setVisibility(View.VISIBLE);
+    protected void requestArtistsList() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://ignored_url")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -109,10 +111,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        progressBar.setVisibility(View.GONE);
         try {
             saveArtists(response.body().string());
             updateList(getSavedArtists());
-            progressBar.setVisibility(View.GONE);
         } catch (IOException e) {
             showErrorDialog(getString(R.string.invalid_response));
             e.printStackTrace();
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPositiveClick() {
-        getArtistsList();
+        requestArtistsList();
     }
 
 
@@ -158,7 +160,6 @@ public class MainActivity extends AppCompatActivity
         Artist[] artistsList = gson.fromJson(data, Artist[].class);
         return Arrays.asList(artistsList);
     }
-
 
     private void updateList(List<Artist> newArtistList) {
         artists.clear();
