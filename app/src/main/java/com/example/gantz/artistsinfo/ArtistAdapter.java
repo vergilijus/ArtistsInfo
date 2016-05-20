@@ -42,8 +42,9 @@ public class ArtistAdapter extends ArrayAdapter<Artist> {
         ImageView imageView = (ImageView) itemView.findViewById(R.id.icon);
 
         tvName.setText(artist.name);
-        tvGenres.setText(artist.genresToString());
-        tvNumbers.setText(String.format("%s, %s", artist.albumsNumberToString(), artist.tracksNumberToString()));
+        tvGenres.setText(artist.genresToString(context));
+        tvNumbers.setText(String.format("%s, %s", artist.albumsNumberToString(context),
+                artist.tracksNumberToString(context)));
 
         // Загружаем аватарку.
         Picasso.with(context).load(artist.cover.small).into(imageView);

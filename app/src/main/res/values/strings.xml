@@ -99,4 +99,7 @@
     <string name="network_error">Ошибка запроса, проверьте подключение к сети.</string>
     <string name="invalid_response">Сервер прислал какую то дичь.</string>
     <string name="action_favorite">Update</string>
+    <string name="not_specified">Не указан</string>
+    <string name="tracks_number">" пес(ен/ни)"</string>
+    <string name="albums_number">" альбом(а/ов)"</string>
 </resources>

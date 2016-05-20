@@ -39,8 +39,9 @@ public class InfoActivity extends AppCompatActivity {
         setTitle(artist.name);
         Picasso.with(this).load(artist.cover.big).into(imageView);
         assert (tvGenres != null) && (tvNumbers != null) && (tvDescription != null);
-        tvGenres.setText(artist.genresToString());
-        tvNumbers.setText(String.format("%s, %s", artist.albumsNumberToString(), artist.tracksNumberToString()));
+        tvGenres.setText(artist.genresToString(this));
+        tvNumbers.setText(String.format("%s, %s", artist.albumsNumberToString(this),
+                artist.tracksNumberToString(this)));
         tvDescription.setText(artist.description);
     }
 

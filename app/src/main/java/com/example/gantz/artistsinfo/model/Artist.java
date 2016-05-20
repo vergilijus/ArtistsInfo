@@ -1,6 +1,10 @@
 package com.example.gantz.artistsinfo.model;
 
 
+import android.content.Context;
+
+import com.example.gantz.artistsinfo.R;
+
 import java.io.Serializable;
 
 public class Artist implements Serializable {
@@ -29,19 +33,19 @@ public class Artist implements Serializable {
         this.description = description;
     }
 
-    public String albumsNumberToString() {
-        return albums + " альбом(а/ов)";
+    public String albumsNumberToString(Context context) {
+        return albums + context.getString(R.string.albums_number);
     }
 
-    public String tracksNumberToString() {
-        return tracks + " пес(ен/ни)";
+    public String tracksNumberToString(Context context) {
+        return tracks + context.getString(R.string.tracks_number);
     }
 
-    public String genresToString() {
+    public String genresToString(Context context) {
         StringBuilder sb = new StringBuilder();
         int length = genres.length;
         if (length < 1) {
-            return "Не указан";
+            return context.getString(R.string.not_specified);
         }
         for (int i = 0; i < length - 2; ++i) {
             sb.append(genres[i]).append(", ");
