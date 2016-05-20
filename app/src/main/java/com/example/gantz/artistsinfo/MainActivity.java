@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity
     public static final String KEY_CURRENT_ARTIST = "CURRENT_ARTIST";
     public static final String KEY_ARTISTS = "ARTISTS";
 
-    private ArrayAdapter<Artist> adapter;
+    private RecyclerView.Adapter adapter;
     private List<Artist> artists;
 
     private ProgressBar progressBar;
@@ -51,27 +54,29 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView listView = (ListView) findViewById(R.id.listView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        assert recyclerView != null;
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         assert progressBar != null;
         progressBar.setVisibility(View.GONE);
 
         artists = new ArrayList<>();
-        adapter = new ArtistAdapter(this, R.layout.list_item, artists);
+        adapter = new ArtistAdapter(this, artists);
 
         setTitle(getString(R.string.main_title));
 
-        assert listView != null;
-        listView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(view.getContext(), InfoActivity.class);
                 intent.putExtra(KEY_CURRENT_ARTIST, artists.get(position));
                 startActivity(intent);
             }
-        });
+        });*/
 
         // Еесли нет сохраненных данных запрашиваем список исполнителей.
         SharedPreferences preferences = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
