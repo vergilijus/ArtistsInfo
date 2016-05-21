@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
     public static final String KEY_CURRENT_ARTIST = "CURRENT_ARTIST";
     public static final String KEY_ARTISTS = "ARTISTS";
 
-    private RecyclerView.Adapter adapter;
+    private ArtistAdapter adapter;
     private List<Artist> artists;
 
     private ProgressBar progressBar;
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         assert recyclerView != null;
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -69,6 +69,16 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        adapter.setOnItemClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = recyclerView.getChildLayoutPosition(v);
+                Intent intent = new Intent(v.getContext(), InfoActivity.class);
+                intent.putExtra(KEY_CURRENT_ARTIST, artists.get(position));
+                startActivity(intent);
+            }
+        });
+
         /*recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -77,6 +87,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });*/
+
 
         // Еесли нет сохраненных данных запрашиваем список исполнителей.
         SharedPreferences preferences = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);

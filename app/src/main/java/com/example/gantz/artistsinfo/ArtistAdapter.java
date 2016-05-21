@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,20 +17,33 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
 
     private final Context context;
     private final List<Artist> values;
+    private View.OnClickListener clickListener;
+//    private ViewHolder.OnItemClickListener onItemClickListener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder /*implements View.OnClickListener */{
         public TextView tvName;
         public TextView tvGenres;
         public TextView tvNumbers;
         public ImageView imageView;
+//        private OnItemClickListener onItemClickListener;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView/*, OnItemClickListener listener*/) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.name);
             tvGenres = (TextView) itemView.findViewById(R.id.genres);
             tvNumbers = (TextView) itemView.findViewById(R.id.numbers);
             imageView = (ImageView) itemView.findViewById(R.id.icon);
+//            onItemClickListener = listener;
         }
+
+        /*@Override
+        public void onClick(View v) {
+            onItemClickListener.onItemClick(v, );
+        }
+
+        public interface OnItemClickListener {
+            void onItemClick(View v, int position);
+        }*/
     }
 
 
@@ -40,12 +52,16 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
         this.values = values;
     }
 
+    public void setOnItemClickListener(View.OnClickListener listener) {
+        clickListener = listener;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.list_item, parent, false);
+        v.setOnClickListener(clickListener);
         return new ViewHolder(v);
     }
 
@@ -64,4 +80,5 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
     public int getItemCount() {
         return values.size();
     }
+
 }
