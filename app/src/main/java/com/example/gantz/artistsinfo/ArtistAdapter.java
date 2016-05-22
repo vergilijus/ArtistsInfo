@@ -18,32 +18,20 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
     private final Context context;
     private final List<Artist> values;
     private View.OnClickListener clickListener;
-//    private ViewHolder.OnItemClickListener onItemClickListener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder /*implements View.OnClickListener */{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvName;
         public TextView tvGenres;
         public TextView tvNumbers;
         public ImageView imageView;
-//        private OnItemClickListener onItemClickListener;
 
-        public ViewHolder(View itemView/*, OnItemClickListener listener*/) {
+        public ViewHolder(View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.name);
             tvGenres = (TextView) itemView.findViewById(R.id.genres);
             tvNumbers = (TextView) itemView.findViewById(R.id.numbers);
             imageView = (ImageView) itemView.findViewById(R.id.icon);
-//            onItemClickListener = listener;
         }
-
-        /*@Override
-        public void onClick(View v) {
-            onItemClickListener.onItemClick(v, );
-        }
-
-        public interface OnItemClickListener {
-            void onItemClick(View v, int position);
-        }*/
     }
 
 

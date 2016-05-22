@@ -12,11 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.example.gantz.artistsinfo.api.ArtistsApi;
@@ -34,7 +30,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
         implements Callback<ResponseBody>, ErrorDialog.ErrorDialogListener {
@@ -79,15 +74,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        /*recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(view.getContext(), InfoActivity.class);
-                intent.putExtra(KEY_CURRENT_ARTIST, artists.get(position));
-                startActivity(intent);
-            }
-        });*/
-
 
         // Еесли нет сохраненных данных запрашиваем список исполнителей.
         SharedPreferences preferences = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
@@ -117,7 +103,6 @@ public class MainActivity extends AppCompatActivity
     protected void requestArtistsList() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://ignored_url")
-                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ArtistsApi myApi = retrofit.create(ArtistsApi.class);
@@ -136,7 +121,6 @@ public class MainActivity extends AppCompatActivity
             showErrorDialog(getString(R.string.invalid_response));
             e.printStackTrace();
         }
-
     }
 
     @Override
