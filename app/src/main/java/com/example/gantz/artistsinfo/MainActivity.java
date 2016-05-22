@@ -2,7 +2,6 @@ package com.example.gantz.artistsinfo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -19,8 +18,15 @@ import com.example.gantz.artistsinfo.api.ArtistsApi;
 import com.example.gantz.artistsinfo.dialogs.ErrorDialog;
 import com.example.gantz.artistsinfo.model.Artist;
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,9 +41,8 @@ public class MainActivity extends AppCompatActivity
         implements Callback<ResponseBody>, ErrorDialog.ErrorDialogListener {
 
     private static final String TAG = "MainActivity";
-    private static final String PREF_FILE_NAME = "ArtistsPreferences";
     public static final String KEY_CURRENT_ARTIST = "CURRENT_ARTIST";
-    public static final String KEY_ARTISTS = "ARTISTS";
+    private static final String FILE_NAME = "artists.json";
 
     private ArtistAdapter adapter;
     private List<Artist> artists;
@@ -74,14 +79,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
         // Еесли нет сохраненных данных запрашиваем список исполнителей.
-        SharedPreferences preferences = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        if (!preferences.contains(KEY_ARTISTS)) {
+        File file = new File(this.getFilesDir(), FILE_NAME);
+        if (file.exists()) {
+            updateList(getSavedArtists());
+        } else {
             requestArtistsList();
             progressBar.setVisibility(View.VISIBLE);
-        } else {
-            updateList(getSavedArtists());
         }
     }
 
@@ -148,19 +152,30 @@ public class MainActivity extends AppCompatActivity
 
 
     private void saveArtists(String data) {
-        SharedPreferences sharedPref = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(KEY_ARTISTS, data);
-        editor.apply();
+        FileOutputStream outputStream;
+        try {
+            outputStream = openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
+            outputStream.write(data.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @NonNull
     private List<Artist> getSavedArtists() {
-        SharedPreferences sharedPref = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        String data = sharedPref.getString(KEY_ARTISTS, "[]");
-        Gson gson = new Gson();
-        Artist[] artistsList = gson.fromJson(data, Artist[].class);
-        return Arrays.asList(artistsList);
+        Artist[] artists = null;
+        try {
+            FileInputStream inputStream = openFileInput(FILE_NAME);
+            BufferedInputStream buffInputStream = new BufferedInputStream(inputStream);
+            InputStreamReader reader = new InputStreamReader(buffInputStream);
+            JsonReader jsonReader = new JsonReader(reader);
+            Gson gson = new Gson();
+            artists = gson.fromJson(jsonReader, Artist[].class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return Arrays.asList(artists != null ? artists : new Artist[0]);
     }
 
     private void updateList(List<Artist> newArtistList) {
