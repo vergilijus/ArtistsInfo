@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
     android:orientation="vertical"
     android:padding="15dip">
 
@@ -19,14 +20,14 @@
         android:id="@+id/numbers"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/icon"
         android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dip"
         android:layout_toRightOf="@id/icon"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="Нет данных"
-        android:textSize="12sp"
-        android:layout_alignBottom="@+id/icon"
-        android:layout_marginLeft="5dip" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/name"
@@ -35,12 +36,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
+        android:layout_marginLeft="5dip"
         android:layout_toRightOf="@id/icon"
         android:gravity="top"
         android:text="Default name"
-        android:textSize="16sp"
         android:textColor="@color/abc_primary_text_disable_only_material_light"
-        android:layout_marginLeft="5dip" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/genres"
@@ -49,9 +50,9 @@
         android:layout_alignLeft="@+id/name"
         android:layout_alignStart="@+id/name"
         android:layout_below="@+id/name"
+        android:layout_marginTop="3dip"
         android:text="New Text"
-        android:textSize="12sp"
-        android:layout_marginTop="3dip" />
+        android:textSize="12sp" />
 
 
 </RelativeLayout>

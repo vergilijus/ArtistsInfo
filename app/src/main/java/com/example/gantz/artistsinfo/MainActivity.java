@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this));
 
         adapter.setOnItemClickListener(new View.OnClickListener() {
             @Override
